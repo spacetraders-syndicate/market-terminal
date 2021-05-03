@@ -1,28 +1,48 @@
 import { writable } from 'svelte/store';
 
-const messageStore = writable('');
 
-const socket = new WebSocket('https://dev.market.spacetraders.stream');
+type LocationGoodData = {
+	location: string;
+	pricePerUnit: number;
+	purchasePricePerUnit: number;
+	sellPricePerUnit: number;
+	spread: number;
+	quantityAvailable: number;
+}
+
+type MarketGoodData = {
+	symbol: string;
+	prices: LocationGoodData[];
+}
+
+const messageStore = writable<MarketGoodData[]>([]);
+
+const socket = new WebSocket('wss://dev.market.spacetraders.stream');
 
 // Connection opened
 socket.addEventListener('open', function (event) {
     console.log("It's open");
+	sendMessage('sync-locations');
 });
 
 // Listen for messages
 socket.addEventListener('message', function (event) {
-    messageStore.set(event.data);
+	const data = JSON.parse(event.data);
+	if(data.locations){
+		
+	} else {
+		messageStore.set(data);
+	}
 });
 
-const sendMessage = (message: string) => {
+const sendMessage = (message) => {
 	if (socket.readyState <= 1) {
 		socket.send(message);
 	}
 }
 
 export default {
-	subscribe: messageStore.subscribe,
-	sendMessage
+	state: messageStore
 }
 
 

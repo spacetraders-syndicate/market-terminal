@@ -1,3 +1,4 @@
+import typescript from '@rollup/plugin-typescript';
 import svelte from 'rollup-plugin-svelte';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
@@ -43,6 +44,7 @@ export default {
 				dev: !production
 			}
 		}),
+		typescript({ sourceMap: !production }),
 		// we'll extract any component CSS out into
 		// a separate file - better for performance
 		css({ output: 'bundle.css' }),

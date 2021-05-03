@@ -1,11 +1,12 @@
 <script>
   import { onMount } from 'svelte';
-  import store from './store.js';
-  let messages = [];
+  import store from './store/index.ts';
+  let data;
 
   onMount(() => {
-    store.subscribe((currentMessage) => {
-      messages = [...messages, currentMessage];
+    store.state.subscribe((value) => {
+      data = Object.keys(value);
+      console.log(data);
     });
   });
 </script>
@@ -15,9 +16,9 @@
     Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn
     how to build Svelte apps.
   </p>
-  {#each messages as message, i}
+  <!-- {#each data as message, i}
     <p>{message}</p>
-  {/each}
+  {/each} -->
 </main>
 
 <style>
